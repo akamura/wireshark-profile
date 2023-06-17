@@ -1,0 +1,85 @@
+#Wireshark Akamura Packet Drilldown Profile
+#Version 1.0
+#Author: Matia Zanella
+#https://github.com/akamura
+#Copyright (c) 2023
+#
+#
+#MIT License
+#
+#Permission is hereby granted, free of charge, to any person obtaining a copy
+#of this software and associated documentation files (the "Software"), to deal
+#in the Software without restriction, including without limitation the rights
+#to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+#copies of the Software, and to permit persons to whom the Software is
+#furnished to do so, subject to the following conditions:
+#
+#The above copyright notice and this permission notice shall be included in all
+#copies or substantial portions of the Software.
+#
+#THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+#IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+#FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+#AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+#LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+#OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+#SOFTWARE.
+"Ethernet address 00:00:00:00:00:00" ether host 00:00:00:00:00:00
+
+"Ethernet type 0x0806 (ARP)" ether proto 0x0806
+
+"No Broadcast and no Multicast" not broadcast and not multicast
+
+"No ARP" not arp
+
+"No ARP and no DNS" not arp and port not 53
+
+"Captures VLAN traffic for a particular host." vlan and host 10.0.0.1
+
+"Captures VLAN traffic for a paticular host and a particular port (HTTP in the example)" vlan and (host 10.0.0.1 and port 80)
+
+"Capture PPPOE traffic" pppoes and (host 10.0.0.1 and port 80)
+
+"Captures PPPOE traffic for a paticular host and a particular port (HTTP in the example)" pppoes and host 10.0.0.1
+
+"IPv4 only" ip
+
+"IPv4 address 192.0.2.1" host 192.0.2.1
+
+"Capture only traffic to or from a specific IP address" host 10.0.0.1
+
+"Capture traffic to or from (sources or destinations) a range of IP addresses." net 10.0.0.1 mask 255.255.255.0
+
+"Capture traffic to or from (sources or destinations) a range of IP addresses" src net 10.0.0.1/24
+
+"Capture traffic to or from (sources or destinations) a range of IP addresses" dst net 10.0.0.1/24
+
+"IPv6 only" ip6
+
+"IPv6 address 2001:fr2::1" host 2003:fr2::1
+
+"Capture IPv6 Native Traffic Only.  This will exclude tunnelled IPv6"  ip6 and not ip proto 41
+
+"Capture only IPv6 over IPv4 Tunnelled Traffic" ip proto 41
+
+"Capture traffic within a range of ports"  tcp portrange 1800-1880
+
+"Captures all IPv6 traffic within the local network that is multicast (such as Neighbor and Router advertisements)" dst host ff02::1 
+
+"TCP only" tcp
+
+"UDP only" udp
+
+"Non-DNS" not port 53
+
+"TCP or UDP port 80 (HTTP)" port 80
+
+"HTTP TCP port (80)" tcp port http
+
+"Non-HTTP and non-SMTP to/from www.wireshark.org" not port 80 and not port 25 and host www.wireshark.org
+
+"Capture only FTP Traffic"  tcp portrange 20-21
+
+"Captures VoIP SIP traffic using TCP" tcp port sip
+
+"Captures VoIP SIP traffic using UDP" udp port sip

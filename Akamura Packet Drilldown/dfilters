@@ -1,0 +1,66 @@
+#Wireshark Akamura Packet Drilldown Profile
+#Version 1.0
+#Author: Matia Zanella
+#https://github.com/akamura
+#Copyright (c) 2023
+#
+#
+#MIT License
+#
+#Permission is hereby granted, free of charge, to any person obtaining a copy
+#of this software and associated documentation files (the "Software"), to deal
+#in the Software without restriction, including without limitation the rights
+#to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+#copies of the Software, and to permit persons to whom the Software is
+#furnished to do so, subject to the following conditions:
+#
+#The above copyright notice and this permission notice shall be included in all
+#copies or substantial portions of the Software.
+#
+#THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+#IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+#FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+#AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+#LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+#OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+#SOFTWARE.
+"Show Any Data in TCP Urgent Field" tcp.urgent_pointer>0
+"Show TCP Port 443 or 4430 or 4434" tcp.port in {443 4430..4434}
+"Show TCP SYN and non-zero ACK#" tcp.flags.syn==1 && tcp.flags.ack==0 && tcp.ack==0
+"Show TCP SYN plus ACK (Bitwise)" tcp.flags & 0x12
+"Show TCP connection refusal/ACK scan" tcp.flags.reset==1 && tcp.flags.ack==1 && tcp.seq==1 && tcp.ack==1
+"Show just the 3-way Handshake Packets" tcp.flags.syn==1 or (tcp.seq==1 and tcp.ack==1 and tcp.len==0 and tcp.analysis.initial_rtt)
+"Show the number of SYN packets (# connections)" tcp.flags == 2
+"Show TCP Window is Zero" tcp.analysis.zero_window
+"Show TCP Window Update" tcp.analysis.window_update
+"Show TCP Window Full" tcp.analysis.window_full
+"Show TCP Resets" tcp.flags.reset == 1
+"Show TCP Delta Times greater than 1 second" tcp.time_delta > 1
+"Show TCP Retransmissions" tcp.analysis.retransmission or tcp.analysis.out_of_order
+"Show TCP SYN or SYN/ACK packets" (tcp.flags.syn == 1)
+"Show TCP SYN/ACK packets" (tcp.flags.syn == 1) && (tcp.flags.ack ==1)
+"Show TCP SYN packets" (tcp.flags.syn == 1) && (tcp.flags.ack ==0)
+"Show TCP Push Bit is set" tcp.flags.push == 1
+"Show TCP Stream Index Selector" tcp.stream eq 0
+"Show TCP Time Deltas > 1 second" tcp.time_delta > 1
+"Show TCP Time Deltas > 1 but not SYN/FIN/RST" tcp.time_delta > 1 && !(tcp.flags.syn==1 or tcp.flags.fin==1 or tcp.flags.reset==1)
+"Show Bad TCP - only" tcp.analysis.flags && !tcp.analysis.window_update && !(tcp.analysis.keep_alive or tcp.analysis.keep_alive_ack)
+"Show content of TCP with \"GET\"" tcp contains "GET"
+"Show Slow HTTP" frame.time_delta_Showed > 1 and (http.request.method == "GET" || http.response.code == 200)
+"Non-HTTP and non-SMTP to/from 10.0.0.1" not (tcp.port == 80) and not (tcp.port == 25) and ip.addr == 10.0.0.1
+"No ARP and no DNS" not arp and !(udp.port == 53)
+"HTTP" http
+"TCP or UDP port is 80 (HTTP)" tcp.port == 80 || udp.port == 80
+"Non-DNS" !(udp.port == 53 || tcp.port == 53)
+"UDP only" udp
+"TCP only" tcp
+"IPv6 address 2001:db8::1" ipv6.addr == 2001:db8::1
+"IPv6 only" ipv6
+"IPv4 address isn't 10.0.0.1, don't use != for this!" !(ip.addr == 10.0.0.1)
+"IPv4 address 10.0.0.1" ip.addr == 10.0.0.1
+"IPv4 only" ip
+"No ARP" not arp
+"Just Packets with Comments" frame.comment
+"Ethernet broadcast" eth.addr == ff:ff:ff:ff:ff:ff
+"Ethernet type 0x0806 (ARP)" eth.type == 0x0806
+"Ethernet address 00:08:15:00:08:15" eth.addr == 00:08:15:00:08:15
