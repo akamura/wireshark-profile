@@ -1,6 +1,8 @@
 # Wireshark Packet Drilldown Profile
 I spent many years around Wireshark and finally I decided to publish for every Network Warrior a profile that aims to help making troubleshooting a little easier.
 
+![Screenshot](Preview.png)
+
 The profile have some useful filters, packet list column addons as well as color categorisation including:
 1. Network Vlan ID's
 2. Autonomous System number and organisation this helps you understand where the traffic is coming from/to public networks
